@@ -57,6 +57,11 @@ def _eligibility(tender: Tender) -> str:
     return check_eligibility(profile, tender).overall_status
 
 
+def _select_tender(tender_key: str) -> None:
+    st.session_state["selected_tender"] = tender_key
+    st.session_state["page"] = "Find Tenders"
+
+
 def _render_tender_card(tender: Tender) -> None:
     score, reasons = score_tender(profile, tender)
     report = check_eligibility(profile, tender)
@@ -74,10 +79,12 @@ def _render_tender_card(tender: Tender) -> None:
         if tender.summary:
             st.write(tender.summary[:500])
         st.markdown(f"[Open original tender source]({tender.source_url})")
-        if st.button("Open tender details", key=f"open-{tender.dedupe_key}"):
-            st.session_state["selected_tender"] = tender.dedupe_key
-            st.session_state["page"] = "Find Tenders"
-            st.rerun()
+        st.button(
+            "Open tender details",
+            key=f"open-{tender.dedupe_key}",
+            on_click=_select_tender,
+            args=(tender.dedupe_key,),
+        )
 
 
 def _filtered_tenders(rows: list[Tender]) -> list[Tender]:
@@ -289,13 +296,13 @@ page_names = [
     "Eligibility Checker",
     "Saved Tenders",
 ]
+st.session_state.setdefault("page", "Dashboard")
 with st.sidebar:
     st.title("TenderPilot AI")
     st.caption("Tender discovery and evidence-based contractor matching")
     selected_page = st.radio(
         "Navigation",
         page_names,
-        index=page_names.index(st.session_state.get("page", "Dashboard")),
         label_visibility="collapsed",
         key="page",
     )
