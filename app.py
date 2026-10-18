@@ -33,6 +33,280 @@ st.set_page_config(page_title="TenderPilot AI", page_icon="TP", layout="wide")
 initialize_database()
 
 
+def _inject_theme() -> None:
+    st.markdown(
+        """
+        <style>
+        :root {
+            --brand-navy: #102B4E;
+            --brand-blue: #1769E8;
+            --brand-blue-hover: #1258C7;
+            --brand-surface: #EAF3FF;
+            --page-bg: #F6F8FC;
+            --surface: #FFFFFF;
+            --border: #E2E8F0;
+            --text: #15243A;
+            --muted: #64748B;
+            --success: #16835D;
+            --warning: #A96105;
+            --danger: #C53B42;
+            --shadow: rgba(16, 43, 78, 0.08);
+        }
+
+        .stApp {
+            background: var(--page-bg);
+        }
+
+        [data-testid="stAppViewContainer"] {
+            background: var(--page-bg);
+        }
+
+        [data-testid="stSidebar"] {
+            background: var(--brand-navy);
+            border-right: 1px solid rgba(255,255,255,0.08);
+        }
+
+        [data-testid="stSidebar"] > div {
+            background: var(--brand-navy);
+        }
+
+        [data-testid="stSidebar"] .block-container {
+            padding-top: 1rem;
+            padding-bottom: 1.5rem;
+        }
+
+        .brand-box {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.25rem 0.5rem 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .brand-mark {
+            width: 2.5rem;
+            height: 2.5rem;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, rgba(97, 169, 255, 0.38), rgba(23, 105, 232, 0.75));
+            border-radius: 0.8rem;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.28);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-mark::before,
+        .brand-mark::after {
+            content: "";
+            position: absolute;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.9);
+        }
+
+        .brand-mark::before {
+            width: 1.1rem;
+            height: 0.18rem;
+            transform: rotate(45deg);
+            left: 0.72rem;
+            top: 1.3rem;
+        }
+
+        .brand-mark::after {
+            width: 0.9rem;
+            height: 0.9rem;
+            border-top: 0.19rem solid rgba(255,255,255,0.9);
+            border-right: 0.19rem solid rgba(255,255,255,0.9);
+            border-radius: 0.2rem;
+            transform: rotate(45deg);
+            right: 0.64rem;
+            top: 0.8rem;
+            background: transparent;
+        }
+
+        .brand-wordmark {
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            color: #F8FBFF;
+            line-height: 1.2;
+        }
+
+        .brand-tag {
+            font-size: 0.72rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.72);
+            line-height: 1.3;
+        }
+
+        [data-testid="stSidebar"] .stCaption {
+            color: rgba(255,255,255,0.72);
+            margin: 0 0 0.75rem;
+            padding: 0 0.5rem;
+        }
+
+        .stRadio {
+            margin-top: 0.25rem;
+        }
+
+        .stRadio [role="radiogroup"] {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .stRadio label {
+            background: transparent;
+            border: none;
+            border-radius: 0.7rem;
+            padding: 0.45rem 0.6rem;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .stRadio label:hover {
+            background: rgba(255,255,255,0.04);
+        }
+
+        .stRadio label[data-checked="true"] {
+            background: rgba(23, 105, 232, 0.2);
+            border: 1px solid rgba(135, 185, 255, 0.35);
+        }
+
+        .stRadio label p {
+            margin: 0;
+            color: inherit;
+            font-weight: 600;
+        }
+
+        .stRadio label div[role="radio"] {
+            border-color: rgba(255,255,255,0.7);
+        }
+
+        .stSidebar .stDivider {
+            border-color: rgba(255,255,255,0.14);
+            margin: 1rem 0.25rem;
+        }
+
+        .block-container {
+            padding: 1.25rem 1.5rem 2rem;
+        }
+
+        .stMetric {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 0.85rem;
+            padding: 1rem 1rem 0.75rem;
+            box-shadow: 0 1px 2px var(--shadow);
+        }
+
+        .stMetric [data-testid="stMetricLabel"] {
+            color: var(--muted);
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+
+        .stMetric [data-testid="stMetricValue"] {
+            color: var(--text);
+            font-size: 1.85rem;
+            font-weight: 700;
+            letter-spacing: -0.04em;
+        }
+
+        .stMetric [data-testid="stMetricDelta"] {
+            font-size: 0.72rem;
+            color: var(--muted);
+        }
+
+        .stButton > button,
+        .stDownloadButton > button {
+            background: var(--brand-blue);
+            color: white;
+            border: none;
+            border-radius: 0.7rem;
+            padding: 0.6rem 1rem;
+            font-weight: 600;
+            box-shadow: none;
+        }
+
+        .stButton > button:hover,
+        .stDownloadButton > button:hover {
+            background: var(--brand-blue-hover);
+            color: white;
+        }
+
+        .stButton button[kind="secondary"],
+        .stButton > button[type="button"] {
+            background: #fff;
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .stButton button[kind="secondary"]:hover,
+        .stButton > button[type="button"]:hover {
+            border-color: var(--border);
+            background: #f8fafc;
+        }
+
+        .stTextInput input,
+        .stNumberInput input,
+        .stSelectbox div[data-baseweb="select"] > div,
+        .stDateInput input,
+        .stFileUploader div {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 0.7rem;
+            color: var(--text);
+        }
+
+        .stTextInput label,
+        .stNumberInput label,
+        .stSelectbox label,
+        .stDateInput label,
+        .stFileUploader label {
+            color: var(--muted);
+            font-weight: 600;
+            font-size: 0.78rem;
+        }
+
+        [data-testid="stExpander"] {
+            border: 1px solid var(--border);
+            border-radius: 0.85rem;
+            background: var(--surface);
+            box-shadow: 0 1px 2px var(--shadow);
+        }
+
+        [data-testid="stExpander"] summary {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        [data-testid="stStatusWidget"] {
+            border-radius: 0.7rem;
+        }
+
+        [data-testid="stVerticalBlockBorderWrapper"] > [data-testid="stVerticalBlock"] > div {
+            background: transparent;
+        }
+
+        @media (max-width: 768px) {
+            .block-container {
+                padding-left: 0.8rem;
+                padding-right: 0.8rem;
+            }
+
+            [data-testid="stSidebar"] {
+                width: min(280px, 85vw);
+            }
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+_inject_theme()
+
+
 def _api_key() -> str:
     try:
         configured = st.secrets.get("TINYFISH_API_KEY", "")
@@ -298,7 +572,18 @@ page_names = [
 ]
 st.session_state.setdefault("page", "Dashboard")
 with st.sidebar:
-    st.title("TenderPilot AI")
+    st.markdown(
+        """
+        <div class="brand-box">
+            <div class="brand-mark" aria-hidden="true"></div>
+            <div>
+                <div class="brand-wordmark">TenderPilot</div>
+                <div class="brand-tag">Find. Match. Win.</div>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
     st.caption("Tender discovery and evidence-based contractor matching")
     selected_page = st.radio(
         "Navigation",
